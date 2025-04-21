@@ -26,16 +26,16 @@ nodo2 = record
 end;
 
 procedure leerCliente (var c: cliente); //se dispone
-procedure agregarClienteAtras(l: listaClientes); //se dispone
+procedure agregarClientes(l: listaClientes); //se dispone
 
-procedure agregarAtras(l: listaCompras; c: compra);
+procedure agregar(var l: listaCompras; c: compra);
 var
  nuevo: listaCompras;
 begin
     new(nuevo);
     nuevo^.dato:= c;
-    nuevo^.sig:= nil;
-    l^.sig:= nuevo;
+    nuevo^.sig:= l;
+    l:= nuevo;
 end;
 
 procedure agregarCompras (l1: listaClientes; l2: listaCompras);
@@ -49,17 +49,17 @@ begin
         cantCompras:= 0;
         monto:= 0;
         dniActual:= l1^.dato.dni;
-        while (dniActual = l1^.dato.dni) do begin
+        while ((l1<>nil)and(dniActual = l1^.dato.dni)) do begin	//Procesa el dni actual
             cantCompras:= cantCompras + 1;
             monto:= monto + l1^.dato.monto;
+	    l1 := l1^.sig;
         end;
-        if (cantCompras > 5) then begin
-			c.dni:= dniActual;
-			c.cant:= cantCompras;
-			c.montoTotal:= monto;
-            agregarAtras(l2, c);
+        if (cantCompras > 5) then begin	//Clasifica la compra
+		c.dni:= dniActual;
+		c.cant:= cantCompras;
+		c.montoTotal:= monto;
+          	agregar(l2, c);
         end;
-        l1:= l1^.sig;
     end;
 end;
 
@@ -69,7 +69,7 @@ l2: listaCompras;
 begin
     l1:= nil;
     l2:= nil;
-    agregarClienteAtras(l1);
-    agregarCompras(l1, l2);
+    agregarClientes(l1);	//Se dispone y se carga la estructura
+    agregarCompras(l1, l2);	//Se crea nueva estructura
 end.
     
